@@ -57,6 +57,12 @@ class Dealer():
 
 class Chickens():
     # creates cpu players to play with player: Ester, Petra and Elinor
+
+    # Three types: wildcard, aggressive, and safe
+    def type:
+
+
+    random.choice(type)
     pass
 
 class Player():
