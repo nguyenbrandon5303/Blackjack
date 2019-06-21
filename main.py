@@ -8,38 +8,42 @@ class deck():
     def create_deck(deck_size):
         
         actual_deck = {}
-        
-        for deck in range(deck_size * 52):
-            # converts deck into a number between 1 and 13, inclusive
-            value = int(deck/4) + 1
-            
-            # for values 11,12,13 (Jack, Queen, King) gives that key a value of 10
-            if(value > 10):
-                value = 10
-            
-            # Designates the suit of the card
-            if(deck % 4 == 0):
-                suit = "Diamond"
-            elif(deck % 4 == 1):
-                suit = "Clubs"
-            elif(deck % 4 == 2):
-                suit = "Hearts"
-            elif(deck % 4 == 3):
-                suit = "Spades"
 
-            # Displays the card number (ace, one, two, ..., king)
-            card = str(int(deck/4) + 1)
-            
-            if(card == "1"):
-                card = "Ace"
-            elif(card == "11"):
-                card = "Jack"
-            elif(card == "12"):
-                card = "Queen"
-            elif(card == "13"):
-                card = "King"
-            actual_deck[deck] = [card, suit , value]
-        
+        for temp in range(deck_size):
+            first_char = str(temp)
+            for deck in range(52):
+                # converts deck into a number between 1 and 13, inclusive
+                value = int(deck/4) + 1
+
+                # for values 11,12,13 (Jack, Queen, King) gives that key a value of 10
+                if(value > 10):
+                    value = 10
+
+                # Designates the suit of the card
+                if(deck % 4 == 0):
+                    suit = "Diamonds"
+                elif(deck % 4 == 1):
+                    suit = "Clubs"
+                elif(deck % 4 == 2):
+                    suit = "Hearts"
+                elif(deck % 4 == 3):
+                    suit = "Spades"
+
+                # Displays the card number (ace, one, two, ..., king)
+                card = str(int(deck/4) + 1)
+
+                if(card == "1"):
+                    card = "Ace"
+                elif(card == "11"):
+                    card = "Jack"
+                elif(card == "12"):
+                    card = "Queen"
+                elif(card == "13"):
+                    card = "King"
+
+                second_char = str(deck)
+                actual_deck[first_char + second_char] = [card, suit, value]
+
         return actual_deck
     
     # prints the whole deck
