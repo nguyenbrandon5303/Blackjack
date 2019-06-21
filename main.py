@@ -21,6 +21,7 @@ class Deck():
     def print_deck(actual_deck):
         print(actual_deck)
 
+
 class Dealer():
     # creates the dealer with condition of hitting until 17, standing otherwise
     pass
