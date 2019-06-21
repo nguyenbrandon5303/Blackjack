@@ -3,8 +3,8 @@
 # Blackjack game
 import random
 
-class deck():
-    #creates a deck with # of decks (deck_size) times 52
+class Deck():
+    # creates a deck with # of decks (deck_size) times 52
     @staticmethod
     def create_deck(deck_size):
         
@@ -14,23 +14,24 @@ class deck():
             for single_deck in range(52):
                 actual_deck.append(single_deck+1)
         
-        #shuffles the whole deck
+        # shuffles the whole deck
         random.shuffle(actual_deck)
         return actual_deck
     
-    #prints the whole deck
+    # prints the whole deck
     @staticmethod
     def print_deck(actual_deck):
         print(actual_deck)
 
 class Dealer():
-    #creates the dealer with condition of hitting until 17, standing otherwise
+    # creates the dealer with condition of hitting until 17, standing otherwise
+    pass
 
 # plays the game by going through each player + dealer, deals the cards, etc.
-class main():
+class Main():
     print("Welcome to Blackjack")
     
-    #User inputs # of decks but is converted to a string, ord converts string to integer
+    # User inputs # of decks but is converted to a string, ord converts string to integer
     temp_decks = input("Please enter the number of decks you would like to use: ")
     num_decks = int(temp_decks)
     trial = deck()
@@ -41,9 +42,3 @@ class main():
 
 
 main()
-
-
-
-
-
-
