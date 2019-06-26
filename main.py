@@ -43,8 +43,7 @@ class deck:
                     card = "Queen"
                 elif(card == "13"):
                     card = "King"
-                actual_deck[deck] = [card, suit , value]
-            
+                actual_deck[str(temp) + str(deck)] = [card, suit , value]
         return actual_deck
     
     # prints the whole deck
@@ -54,24 +53,37 @@ class deck:
 
 class Dealer:
     # creates the dealer with condition of hitting until 17, standing otherwise
-    def __init__(self, current_deck, num_value, my_turn):
+    # current_hand is the dealer's current hand, whenever they hit it adds on to this hand
+    def __init__(self, current_deck, num_value, my_turn, current_hand):
         self.current_deck = current_deck
         self.num_value = num_value
         self.my_turn = my_turn
+        self.current_hand = current_hand
+        # this counts aces on the first card draw as an 11
         if(self.num_value == 1):
             self.num_value = 11
+        for check in self.current_hand:
+            self.num_value += check[2]
+
     
     def hit(self):
         print("The dealer has %d." % self.num_value)
         temp_card = self.current_deck.pop(random.choice(list(self.current_deck.keys())))
+        self.current_hand.append(temp_card)
         card_value = temp_card[2]
         print(temp_card)
         
-        if(card_value == 1 and self.num_value <= 10):
-            card_value = 11
-        
-        self.num_value += card_value
+        #this resets the total value of the current hand to check for aces and changes respectively
+        temp_hand_value = 0
+        for ace in self.current_hand:
+            if(ace[0] == 'Ace' and self.num_value < 11):
+                ace[2] = 11
+            elif(ace[0] == 'Ace' and self.num_value > 11):
+                ace[2] = 1
+            temp_hand_value += ace[2]
+        self.num_value = temp_hand_value
         print("The dealer hits and now has %d." % self.num_value)
+        
         return self.num_value
     
     def stand(self):
@@ -93,30 +105,53 @@ class Chickens:
 
 class Player:
     # creates the actions for the player, attributes
-    def __init__(self, current_deck, name, num_value, my_turn):
+    # current_hand is the dealer's current hand, whenever they hit it adds on to this hand
+    
+    def __init__(self, current_deck, name, num_value, my_turn, current_hand):
         self.current_deck = current_deck
         self.name = name
         self.num_value = num_value
         self.my_turn = my_turn
+        self.current_hand = current_hand
         if(self.num_value == 1):
             self.num_value = 11
+        for check in self.current_hand:
+            self.num_value += check[2]
     
     def second_card(self, num_players):
         player_second_card = self.current_deck.pop(random.choice(list(self.current_deck.keys())))
+        self.current_hand.append(player_second_card)
         self.num_value += player_second_card[2]
+        
+        #this resets the total value of the current hand to check for aces and changes respectively
+        temp_hand_value = 0
+        for ace in self.current_hand:
+            if(ace[0] == 'Ace' and self.num_value < 11):
+                ace[2] = 11
+            elif(ace[0] == 'Ace' and self.num_value > 11):
+                ace[2] = 1
+            temp_hand_value += ace[2]
+        self.num_value = temp_hand_value
         print("%s's second card is %s of %s. %s has %d." % (self.name, player_second_card[0], player_second_card[1], self.name, self.num_value))
-    
+        return player_second_card
     
     def hit(self):
         print("%s have %d." % (self.name, self.num_value))
         temp_card = self.current_deck.pop(random.choice(list(self.current_deck.keys())))
+        self.current_hand.append(temp_card)
         card_value = temp_card[2]
         print(temp_card)
         
-        if(card_value == 1 and self.num_value <= 10):
-            card_value = 11
+        #this resets the total value of the current hand to check for aces and changes respectively
+        temp_hand_value = 0
+        for ace in self.current_hand:
+            if(ace[0] == 'Ace' and self.num_value < 11):
+                ace[2] = 11
+            elif(ace[0] == 'Ace' and self.num_value > 11):
+                ace[2] = 1
+            temp_hand_value += ace[2]
+        self.num_value = temp_hand_value
         
-        self.num_value += card_value
         print("%s hits and now have %d." % (self.name, self.num_value))
         if(self.num_value > 21):
             print("%s busted with %d." % (self.name, self.num_value))
@@ -136,7 +171,7 @@ class main:
     num_decks = int(temp_decks)
     trial = deck()
     trial_deck = trial.create_deck(num_decks).copy()
-    trial.print_deck(trial_deck)
+    # trial.print_deck(trial_deck)
     
     # User inputs # of players using same code as above to convert to integer
     temp_players = input("Please enter the number of players that would like to play: ")
@@ -145,25 +180,30 @@ class main:
     # creates players
     list_players = []
     for player_name in range(1, num_players + 1):
+        players_hand = []
         temp_name = input("Please enter Player %d's name: " % player_name)
-        list_players.append(Player(trial_deck, temp_name, 0, True))
+        list_players.append(Player(trial_deck, temp_name, 0, True, players_hand))
     
     # creates dealer
-    current_dealer = Dealer(trial_deck, 0, True)
+    dealers_hand = []
+    current_dealer = Dealer(trial_deck, 0, True, dealers_hand)
     current_dealer.temp_deck = trial_deck
     
     # deals first cards
     for first_card in range(1, num_players + 1):
         player_first_card = trial_deck.pop(random.choice(list(trial_deck.keys())))
         list_players[first_card - 1].num_value = player_first_card[2]
+        list_players[first_card - 1].current_hand.append(player_first_card)
         print("%s starts with: %s of %s." % (list_players[first_card - 1].name, player_first_card[0], player_first_card[1]))
     dealer_first_card = trial_deck.pop(random.choice(list(trial_deck.keys())))
+    dealers_hand.append(dealer_first_card)
     current_dealer.num_value = dealer_first_card[2]
     print("Dealer starts with: %s of %s." % (dealer_first_card[0], dealer_first_card[1]))
     
     # deals second cards
     for second_card in range(1, num_players + 1):
         list_players[second_card - 1].second_card(num_players)
+
     
     
     # game starts with first player and ends with the dealer
@@ -184,7 +224,6 @@ class main:
     
 
 main()
-
 
 
 
